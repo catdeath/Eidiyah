@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عيد مبارك! مبروك لقد ربحت</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Tajawal', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            background: linear-gradient(135deg, #fff4e6, #ffebcc); /* Light Gold & Cream */
+            color: #d4a017; /* Rich Gold */
+            direction: rtl;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Money Display */
+        .money-display {
+            font-size: 70px;
+            font-weight: bold;
+            color: #ff9900; /* Brighter Gold */
+            text-shadow: 3px 3px 10px rgba(255, 165, 0, 0.8);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        /* Celebration Message */
+        .celebration-message {
+            font-size: 45px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ff5500; /* Warm, happy orange */
+            text-shadow: 3px 3px 5px rgba(255, 100, 0, 0.5);
+            animation: bounce 1.5s infinite;
+        }
+
+        /* Eid Decorations */
+        .eid-moon {
+            font-size: 100px;
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: glow 2s infinite alternate;
+            color: #ffd700;
+        }
+
+        .eid-lantern {
+            font-size: 60px;
+            position: absolute;
+            animation: swing 3s infinite ease-in-out alternate;
+            color: #ff8800;
+        }
+
+        .lantern-left {
+            left: 20%;
+            top: 15%;
+        }
+
+        .lantern-right {
+            right: 20%;
+            top: 15%;
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: gold;
+            opacity: 0.8;
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+
+        /* Keyframes */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+            }
+            to {
+                text-shadow: 0 0 25px rgba(255, 165, 0, 1);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes swing {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Eid Moon & Lanterns -->
+    <div class="eid-moon">🌙</div>
+    <div class="eid-lantern lantern-left">🏮</div>
+    <div class="eid-lantern lantern-right">🏮</div>
+
+    <!-- Money Display -->
+    <div class="money-display" id="moneyDisplay"></div>
+
+    <!-- Celebration Message -->
+    <div class="celebration-message" id="celebrationMessage"></div>
+
+    <script>
+        // Function to format number as Saudi Riyals (﷼)
+        function formatCurrency(value) {
+            return value.toLocaleString('ar-SA') + ' ﷼';
+        }
+
+        // Get URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const moneyValue = params.get('amount');
+
+        // Display formatted money
+        if (moneyValue) {
+            const formattedMoney = formatCurrency(parseFloat(moneyValue));
+            document.getElementById('moneyDisplay').textContent = formattedMoney;
+            document.getElementById('celebrationMessage').textContent = `🎉 عيد مبارك! مبروك لقد ربحت ${formattedMoney} 🎉`;
+        } else {
+            document.getElementById('moneyDisplay').textContent = 'لم يتم تحديد المبلغ';
+            document.getElementById('celebrationMessage').textContent = '';
+        }
+
+        // Generate Confetti
+        function createConfetti() {
+            for (let i = 150; i > 0; i--) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                document.body.appendChild(confetti);
+
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                confetti.style.width = confetti.style.height = Math.random() * 12 + 'px';
+            }
+        }
+
+        createConfetti();
+    </script>
+</body>
+</html>
