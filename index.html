@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عيد مبارك! مبروك لقد ربحت</title>
+    <title>عيد مبارك!</title>
     <style>
         /* General Styles */
         body {
@@ -22,111 +22,62 @@
             position: relative;
         }
 
-        /* Money Display */
-        .money-display {
-            font-size: 70px;
-            font-weight: bold;
-            color: #ff9900; /* Brighter Gold */
-            text-shadow: 3px 3px 10px rgba(255, 165, 0, 0.8);
-            animation: glow 1.5s infinite alternate;
-        }
-
-        /* Celebration Message */
+        /* Sliding Text */
         .celebration-message {
             font-size: 45px;
             font-weight: bold;
-            margin-top: 20px;
             color: #ff5500; /* Warm, happy orange */
             text-shadow: 3px 3px 5px rgba(255, 100, 0, 0.5);
-            animation: bounce 1.5s infinite;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slideIn 1.5s ease-out forwards;
         }
 
-        /* Eid Decorations */
-        .eid-moon {
-            font-size: 100px;
-            position: absolute;
-            top: 8%;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: glow 2s infinite alternate;
-            color: #ffd700;
+        /* Sliding Image */
+        .image-container {
+            position: relative;
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slideIn 1.5s ease-out forwards 0.5s;
         }
 
-        .eid-lantern {
-            font-size: 60px;
-            position: absolute;
-            animation: swing 3s infinite ease-in-out alternate;
-            color: #ff8800;
-        }
-
-        .lantern-left {
-            left: 20%;
-            top: 15%;
-        }
-
-        .lantern-right {
-            right: 20%;
-            top: 15%;
-        }
-
-        /* Confetti Animation */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: gold;
-            opacity: 0.8;
-            border-radius: 50%;
-            animation: fall linear infinite;
-        }
-
-        /* Keyframes */
-        @keyframes glow {
+        /* Keyframes for Sliding Effect */
+        @keyframes slideIn {
             from {
-                text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+                opacity: 0;
+                transform: translateX(-100%);
             }
             to {
-                text-shadow: 0 0 25px rgba(255, 165, 0, 1);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
                 opacity: 1;
+                transform: translateX(0);
             }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes swing {
-            0% { transform: rotate(0deg); }
-            50% { transform: rotate(10deg); }
-            100% { transform: rotate(0deg); }
         }
     </style>
 </head>
 <body>
-
-    <!-- Eid Moon & Lanterns -->
-    <div class="eid-moon">🌙</div>
-    <div class="eid-lantern lantern-left">🏮</div>
-    <div class="eid-lantern lantern-right">🏮</div>
-
-    <!-- Money Display -->
-    <div class="money-display" id="moneyDisplay"></div>
-
+    
+<img class="image-container" id="celebrationImage" src="" alt="احتفال">
     <!-- Celebration Message -->
     <div class="celebration-message" id="celebrationMessage"></div>
 
+    <!-- Image Container -->
+   
+
     <script>
+        // Mapping of numbers to local images
+        const imageMappings = {
+            "half": { img:"images/eid05.jpeg",text: "",amount:0.5 },
+            "1": { img:"images/eid1.jpeg",text: "",amount:1 },
+            "2":{ img: "images/eid2.jpeg",text: "",amount:2 },
+            "5":{ img: "images/eid5.jpeg",text: "",amount:5 },
+            "50": { img:"images/eid50.jpeg",text: "",amount:50 },
+            "zero": { img:"images/eid0.jpeg", text: "",amount:0 }
+        };
+
         // Function to format number as Saudi Riyals (﷼)
         function formatCurrency(value) {
             return value.toLocaleString('ar-SA') + ' ﷼';
@@ -134,33 +85,21 @@
 
         // Get URL parameters
         const params = new URLSearchParams(window.location.search);
-        const moneyValue = params.get('amount');
+        const encodedAmount = params.get('amount');
+        const obj = imageMappings[encodedAmount];
+ 
+          
+        const formattedMoney = formatCurrency(parseFloat(obj.amount));
 
-        // Display formatted money
-        if (moneyValue) {
-            const formattedMoney = formatCurrency(parseFloat(moneyValue));
-            document.getElementById('moneyDisplay').textContent = formattedMoney;
-            document.getElementById('celebrationMessage').textContent = `🎉 عيد مبارك! مبروك لقد ربحت ${formattedMoney} 🎉`;
-        } else {
-            document.getElementById('moneyDisplay').textContent = 'لم يتم تحديد المبلغ';
-            document.getElementById('celebrationMessage').textContent = '';
-        }
+        // Update text
+        document.getElementById('celebrationMessage').textContent = `🎉عيديتك  ${formattedMoney} 🎉`;
 
-        // Generate Confetti
-        function createConfetti() {
-            for (let i = 150; i > 0; i--) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                document.body.appendChild(confetti);
+        // Select Image Based on Amount (Map to Number)
+        const amountNumber = parseFloat(encodedAmount);
+        const selectedImage = obj.img || "images/default.jpg";
 
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-                confetti.style.width = confetti.style.height = Math.random() * 12 + 'px';
-            }
-        }
-
-        createConfetti();
+        // Update Image Source
+        document.getElementById('celebrationImage').src = selectedImage;
     </script>
 </body>
 </html>
